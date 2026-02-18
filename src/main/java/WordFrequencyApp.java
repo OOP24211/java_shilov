@@ -1,31 +1,47 @@
 import java.io.IOException;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-// Entry Point
+/**
+ * Точка входа в приложение для анализа текста и генерации CSV-отчета.
+ */
 public class WordFrequencyApp {
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         String inputPath = "test.txt";
-        String outputPath = inputPath + ".csv";
 
         try {
+            String outputPath = buildOutputPath(inputPath);
+
             TextAnalyzer analyzer = new TextAnalyzer(inputPath);
-            List<WordStat> stats = analyzer.analyze();
+            var stats = analyzer.analyze();
 
             if (stats.isEmpty()) {
                 System.out.println("Файл пуст или не содержит слов.");
                 return;
             }
 
-            CsvReportWriter reportWriter = new CsvReportWriter();
-            reportWriter.write(outputPath, stats);
+            CsvReportWriter writer = new CsvReportWriter();
+            writer.write(outputPath, stats);
 
-            System.out.println("CSV файл создан: " + outputPath);
+            long wordCount = stats.stream().mapToInt(WordStat::count).sum();
+            System.out.printf("Обработано слов: %d%n", wordCount);
+            System.out.printf("Уникальных слов: %d%n", stats.size());
+            System.out.printf("CSV файл создан: %s%n", outputPath);
 
         } catch (IOException e) {
             System.err.println("Ошибка при работе с файлом: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Произошла ошибка: " + e.getMessage());
+            System.err.println("Произошла непредвиденная ошибка: " + e.getMessage());
         }
+    }
+
+    private static String buildOutputPath(String inputPath) {
+        Path path = Paths.get(inputPath);
+        String fileName = path.getFileName().toString();
+        int lastDotIndex = fileName.lastIndexOf('.');
+        String nameWithoutExt = (lastDotIndex > 0) ? fileName.substring(0, lastDotIndex) : fileName;
+        return nameWithoutExt + ".csv";
     }
 }

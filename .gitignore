@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 .kotlin
 .mvn
+test.csv
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
