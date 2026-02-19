@@ -1,3 +1,6 @@
+
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -6,6 +9,7 @@ import java.nio.file.Paths;
 /**
  * Точка входа в приложение для анализа текста и генерации CSV-отчета.
  */
+@Slf4j
 public class WordFrequencyApp {
 
     public static void main(String[] args) {
@@ -31,9 +35,9 @@ public class WordFrequencyApp {
             System.out.printf("CSV файл создан: %s%n", outputPath);
 
         } catch (IOException e) {
-            System.err.println("Ошибка при работе с файлом: " + e.getMessage());
+            log.error("Ошибка при работе с файлом: {}", e.getMessage());
         } catch (Exception e) {
-            System.err.println("Произошла непредвиденная ошибка: " + e.getMessage());
+            log.error("Произошла непредвиденная ошибка: {}", e.getMessage());
         }
     }
 
