@@ -1,19 +1,19 @@
 package com.example.lab0.config;
 
+import com.example.lab0.constants.AppConstants;
 import com.example.lab0.exception.FileOperationException;
 import com.example.lab0.exception.InvalidInputException;
+import com.example.lab0.validation.FileValidator;
+import com.example.lab0.validation.PathValidator;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * Конфигурация приложения с валидацией параметров.
+ * Использует валидаторы для устранения дублирования кода.
  */
 public final class AppConfiguration {
-
-    private static final String DEFAULT_INPUT_FILE = "test.txt";
-    private static final String OUTPUT_EXTENSION = ".csv";
 
     private final Path inputPath;
     private final Path outputPath;
@@ -36,9 +36,7 @@ public final class AppConfiguration {
         }
 
         String inputFilePath = parseInputFile(args);
-        validateInputFilePath(inputFilePath);
-
-        Path inputPath = Paths.get(inputFilePath).toAbsolutePath().normalize();
+        Path inputPath = PathValidator.validate(inputFilePath).toAbsolutePath().normalize();
         Path outputPath = buildOutputPath(inputPath);
 
         return new AppConfiguration(inputPath, outputPath);
@@ -46,7 +44,7 @@ public final class AppConfiguration {
 
     private static String parseInputFile(String[] args) {
         if (args.length == 0) {
-            return DEFAULT_INPUT_FILE;
+            return AppConstants.DEFAULT_INPUT_FILE;
         }
 
         if (args.length > 1) {
@@ -63,27 +61,11 @@ public final class AppConfiguration {
         return inputFilePath;
     }
 
-    private static void validateInputFilePath(String path) {
-        if (path == null || path.trim().isEmpty()) {
-            throw new InvalidInputException("Путь к входному файлу не может быть пустым");
-        }
-
-        String trimmedPath = path.trim();
-        if (trimmedPath.length() > 1000) {
-            throw new InvalidInputException("Путь к файлу слишком длинный (максимум 1000 символов)");
-        }
-
-        if (trimmedPath.contains("\0")) {
-            throw new InvalidInputException("Путь к файлу содержит недопустимые символы");
-        }
-    }
-
     private static Path buildOutputPath(Path inputPath) {
         String fileName = inputPath.getFileName().toString();
         int lastDotIndex = fileName.lastIndexOf('.');
         String nameWithoutExt = (lastDotIndex > 0) ? fileName.substring(0, lastDotIndex) : fileName;
-        String outputFileName = nameWithoutExt + OUTPUT_EXTENSION;
-        return inputPath.resolveSibling(outputFileName);
+        return inputPath.resolveSibling(nameWithoutExt + AppConstants.CSV_OUTPUT_EXTENSION);
     }
 
     /**
@@ -93,17 +75,7 @@ public final class AppConfiguration {
      * @throws FileOperationException если файл не существует или не читаем
      */
     public void validateInputFileExists() {
-        if (!Files.exists(inputPath)) {
-            throw new FileOperationException("Файл не найден: " + inputPath);
-        }
-
-        if (!Files.isReadable(inputPath)) {
-            throw new FileOperationException("Файл не доступен для чтения: " + inputPath);
-        }
-
-        if (Files.isDirectory(inputPath)) {
-            throw new FileOperationException("Указанный путь является директорией, а не файлом: " + inputPath);
-        }
+        FileValidator.validateReadableFile(inputPath);
     }
 
     public Path getInputPath() {
