@@ -1,12 +1,9 @@
 package com.example.lab0.config;
 
 import com.example.lab0.constants.AppConstants;
-import com.example.lab0.exception.FileOperationException;
 import com.example.lab0.exception.InvalidInputException;
-import com.example.lab0.validation.FileValidator;
 import com.example.lab0.validation.PathValidator;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -66,16 +63,6 @@ public final class AppConfiguration {
         int lastDotIndex = fileName.lastIndexOf('.');
         String nameWithoutExt = (lastDotIndex > 0) ? fileName.substring(0, lastDotIndex) : fileName;
         return inputPath.resolveSibling(nameWithoutExt + AppConstants.CSV_OUTPUT_EXTENSION);
-    }
-
-    /**
-     * Проверяет существование входного файла.
-     * Вызывается после создания конфигурации для ленивой проверки.
-     *
-     * @throws FileOperationException если файл не существует или не читаем
-     */
-    public void validateInputFileExists() {
-        FileValidator.validateReadableFile(inputPath);
     }
 
     public Path getInputPath() {

@@ -57,7 +57,7 @@ public class CsvReportWriter implements ReportWriter<WordStat> {
         writer.write(String.valueOf(AppConstants.COMMA));
         writer.write(Integer.toString(stat.count()));
         writer.write(String.valueOf(AppConstants.COMMA));
-        writer.write(String.format(CSV_LOCALE, AppConstants.CSV_PERCENTAGE_FORMAT, stat.percentage()));
+        writer.write(String.format(CSV_LOCALE, AppConstants.CSV_PERCENTAGE_FORMAT, stat.fraction() * 100.0));
         writer.write(System.lineSeparator());
     }
 

@@ -26,7 +26,7 @@ public final class AppConstants {
 
     // === Форматы и локали ===
     public static final String CSV_PERCENTAGE_FORMAT = "%.4f";
-    public static final String CSV_ROW_FORMAT = "%s,%d,%.4f";
+    public static final String CSV_ROW_FORMAT = "%s,%d,%.4f"; // слово, частота, доля (%)
 
     // === Символы ===
     public static final char NULL_CHARACTER = '\0';

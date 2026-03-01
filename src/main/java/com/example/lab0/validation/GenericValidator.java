@@ -35,7 +35,7 @@ public final class GenericValidator {
      */
     public static int requireNonNegative(int value, String fieldName) {
         if (value < 0) {
-            throw new IllegalArgumentException(fieldName + " не может быть отрицательным: " + value);
+            throw new InvalidInputException(fieldName + " не может быть отрицательным: " + value);
         }
         return value;
     }
@@ -49,7 +49,7 @@ public final class GenericValidator {
      */
     public static long requirePositive(long value, String fieldName) {
         if (value <= 0) {
-            throw new IllegalArgumentException(fieldName + " должно быть положительным: " + value);
+            throw new InvalidInputException(fieldName + " должно быть положительным: " + value);
         }
         return value;
     }
@@ -65,7 +65,7 @@ public final class GenericValidator {
      */
     public static double requireInRange(double value, double min, double max, String fieldName) {
         if (value < min || value > max) {
-            throw new IllegalArgumentException(
+            throw new InvalidInputException(
                 String.format("%s должно быть в диапазоне [%.2f, %.2f]: %.2f", fieldName, min, max, value)
             );
         }
@@ -97,7 +97,7 @@ public final class GenericValidator {
      */
     public static String validateMaxLength(String value, int maxLength, String fieldName) {
         if (value != null && value.length() > maxLength) {
-            throw new IllegalArgumentException(
+            throw new InvalidInputException(
                 String.format("%s слишком длинный (максимум %d символов)", fieldName, maxLength)
             );
         }
@@ -116,11 +116,11 @@ public final class GenericValidator {
 
         String trimmed = word.trim();
         if (trimmed.isEmpty()) {
-            throw new IllegalArgumentException("Слово не может быть пустым");
+            throw new InvalidInputException("Слово не может быть пустым");
         }
 
         if (trimmed.length() > AppConstants.MAX_WORD_LENGTH) {
-            throw new IllegalArgumentException(
+            throw new InvalidInputException(
                 String.format("Слово слишком длинное (максимум %d символов)", AppConstants.MAX_WORD_LENGTH)
             );
         }

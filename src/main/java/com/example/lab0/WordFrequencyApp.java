@@ -60,8 +60,6 @@ public class WordFrequencyApp {
      */
     public int run() {
         try {
-            config.validateInputFileExists();
-
             TextAnalysisResult result = analyzer.analyze();
 
             if (result.isEmpty()) {
