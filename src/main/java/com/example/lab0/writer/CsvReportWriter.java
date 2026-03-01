@@ -27,7 +27,10 @@ public class CsvReportWriter implements ReportWriter<WordStat> {
     @Override
     public void write(Path path, List<WordStat> stats) throws IOException {
         validateWriteParameters(path, stats);
-        FileValidator.validateExists(path.getParent());
+        Path parent = path.getParent();
+        if (parent != null) {
+            FileValidator.validateExists(parent);
+        }
 
         try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
             writeHeader(writer);
